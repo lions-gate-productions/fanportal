@@ -1955,6 +1955,26 @@
             }
         });
     </script>
+<script>
+function updateCountdown() {
+    const now = new Date();
+    let deadline = new Date();
+    deadline.setHours(18, 45, 0, 0); // 18:45:00.000
 
+    // If it's past today's 6:45 pm, set deadline for tomorrow at 6:45 pm
+    if (now > deadline) {
+        deadline.setDate(deadline.getDate() + 1);
+    }
+
+    const diff = Math.max(0, Math.floor((deadline - now) / 1000));
+    const hours = String(Math.floor(diff / 3600)).padStart(2, '0');
+    const minutes = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+    const seconds = String(diff % 60).padStart(2, '0');
+    document.getElementById('countdown').textContent = `${hours}:${minutes}:${seconds}`;
+}
+
+setInterval(updateCountdown, 1000);
+updateCountdown();
+</script>
 </body>
 </html>
