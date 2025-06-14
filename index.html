@@ -241,6 +241,11 @@
             position: relative;
             overflow: hidden;
             z-index: 1;
+            cursor: pointer;
+            user-select: none;
+            /* Fix for mobile responsiveness */
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
         
         .portal-enter-btn::after {
@@ -255,8 +260,15 @@
             z-index: -1;
         }
         
-        .portal-enter-btn:hover::after {
+        .portal-enter-btn:hover::after,
+        .portal-enter-btn:active::after {
             left: 100%;
+        }
+        
+        /* Enhanced button responsiveness */
+        .portal-enter-btn:active {
+            transform: scale(0.98);
+            transition: transform 0.1s ease;
         }
         
         /* Dark mode transitions */
@@ -319,7 +331,7 @@
             100% { height: 4px; }
         }
 
-        /* Mobile responsiveness improvements */
+        /* Enhanced Mobile responsiveness */
         @media (max-width: 768px) {
             .voice-indicator {
                 bottom: 10px;
@@ -382,9 +394,11 @@
 
             /* Better button sizing on mobile */
             .upgrade-btn, .portal-enter-btn {
-                min-height: 44px;
-                padding: 12px 16px;
-                font-size: 16px;
+                min-height: 48px !important;
+                padding: 14px 20px !important;
+                font-size: 16px !important;
+                border-radius: 12px !important;
+                font-weight: 600;
             }
 
             /* Improve modal sizing on mobile */
@@ -392,38 +406,49 @@
                 max-width: calc(100vw - 20px) !important;
                 margin: 10px !important;
             }
+
+            /* Enhanced touch targets */
+            button, .activity-card, a, .voice-indicator {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
         }
 
         @media (max-width: 480px) {
             .text-4xl {
-                font-size: 1.5rem !important;
+                font-size: 1.8rem !important;
+                line-height: 1.2 !important;
             }
 
             .text-5xl {
-                font-size: 1.8rem !important;
+                font-size: 2.2rem !important;
+                line-height: 1.1 !important;
             }
 
             .text-xl, .text-2xl {
-                font-size: 1.1rem !important;
+                font-size: 1.2rem !important;
+                line-height: 1.3 !important;
             }
 
             .py-8 {
-                padding-top: 1.5rem !important;
-                padding-bottom: 1.5rem !important;
+                padding-top: 2rem !important;
+                padding-bottom: 2rem !important;
             }
 
             .px-8 {
-                padding-left: 1rem !important;
-                padding-right: 1rem !important;
+                padding-left: 1.2rem !important;
+                padding-right: 1.2rem !important;
             }
 
             .mb-12 {
-                margin-bottom: 2rem !important;
+                margin-bottom: 2.5rem !important;
             }
 
             .profile-photo.w-40 {
-                width: 100px !important;
-                height: 100px !important;
+                width: 110px !important;
+                height: 110px !important;
             }
 
             .voice-indicator {
@@ -433,15 +458,15 @@
                 width: auto;
                 text-align: center;
             }
-        }
 
-        /* Improve touch targets for mobile */
-        @media (max-width: 768px) {
-            button, .activity-card, a {
-                min-height: 44px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
+            /* Enhanced portal enter button for mobile */
+            .portal-enter-btn {
+                min-height: 52px !important;
+                padding: 16px 24px !important;
+                font-size: 18px !important;
+                border-radius: 16px !important;
+                font-weight: 700;
+                letter-spacing: 0.5px;
             }
         }
 
@@ -468,6 +493,33 @@
         .dropdown-notifications, .dropdown-profile {
             position: fixed !important;
             z-index: 1000 !important;
+        }
+
+        /* Enhanced button interactions */
+        button {
+            transition: all 0.2s ease;
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        /* Loading states */
+        .loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        /* Error states */
+        .error {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+
+        /* Success states */
+        .success {
+            border-color: #10b981;
+            background-color: #f0fdf4;
         }
     </style>
 </head>
@@ -536,7 +588,7 @@
         </div>
         <h1 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-2 text-center animate-pulse-slow">Welcome Diane Potter</h1>
         <p class="text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 text-center">Shine Like a Star with Lions Gate!</p>
-        <button id="enter-portal-btn" class="portal-enter-btn bg-primary hover:bg-primary-dark text-white font-bold py-3 px-6 md:px-8 rounded-full transition-all duration-300 text-base md:text-lg shadow-lg hover:shadow-xl transform hover:scale-105">
+        <button id="enter-portal-btn" class="portal-enter-btn bg-primary hover:bg-primary-dark text-white font-bold py-3 px-6 md:px-8 rounded-full transition-all duration-300 text-base md:text-lg shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-primary-light">
             Enter Portal
         </button>
     </div>
@@ -552,18 +604,18 @@
                         <h1 class="text-lg md:text-xl font-bold text-primary dark:text-primary-light">Lions Gate Fans Portal</h1>
                     </div>
                     <div class="flex items-center space-x-2 md:space-x-4">
-                        <button id="notifications-btn" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                        <button id="notifications-btn" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                             </svg>
                         </button>
-                        <button id="dark-mode-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                        <button id="dark-mode-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
                             </svg>
                         </button>
                         <div class="relative">
-                            <button id="profile-menu-btn" class="flex items-center space-x-2 focus:outline-none">
+                            <button id="profile-menu-btn" class="flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-primary rounded-lg p-1">
                                 <div class="profile-photo w-7 h-7 md:w-8 md:h-8">
                                     <img src="https://pfst.cf2.poecdn.net/base/image/e3e30571ba2c69dccb2fef1fa0292f6e0a7bb73ce03d73bc79d02843f95498a4?w=2640&h=1980" alt="Diane Potter" class="w-full h-full object-cover">
                                 </div>
@@ -618,7 +670,7 @@
                                         <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">99%</span>
                                     </div>
                                     <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                                        <div class="bg-primary dark:bg-primary-light h-2 rounded-full" style="width: 99%"></div>
+                                        <div class="bg-primary dark:bg-primary-light h-2 rounded-full transition-all duration-1000 ease-out" style="width: 99%"></div>
                                     </div>
                                 </div>
                             </div>
@@ -708,7 +760,7 @@
                                         <span class="text-primary dark:text-primary-light font-bold">92/100</span>
                                     </div>
                                     <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                                        <div class="bg-primary dark:bg-primary-light h-1.5 rounded-full" style="width: 92%"></div>
+                                        <div class="bg-primary dark:bg-primary-light h-1.5 rounded-full transition-all duration-1000 ease-out" style="width: 92%"></div>
                                     </div>
                                 </div>
                                 <div class="bg-white dark:bg-secondary-light rounded-lg p-3 text-xs md:text-sm dark-transition">
@@ -717,7 +769,7 @@
                                         <span class="text-primary dark:text-primary-light font-bold">18/20</span>
                                     </div>
                                     <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                                        <div class="bg-primary dark:bg-primary-light h-1.5 rounded-full" style="width: 90%"></div>
+                                        <div class="bg-primary dark:bg-primary-light h-1.5 rounded-full transition-all duration-1000 ease-out" style="width: 90%"></div>
                                     </div>
                                 </div>
                                 <div class="bg-white dark:bg-secondary-light rounded-lg p-3 text-xs md:text-sm dark-transition">
@@ -811,11 +863,11 @@
                         <div class="ml-3">
                             <h3 class="text-base md:text-lg font-medium text-red-800 dark:text-red-300">Account Re-Validation Required</h3>
                             <div class="mt-2 text-red-700 dark:text-red-400">
-                                <p class="text-yellow-400 font-semibold text-xs md:text-sm">Dear Diane, to complete your account re-activation, your profile needs to be upgraded as per our organization's policy. The 3 most dedicated and supportive members are awarded the Member of Honor badge which only the 3 most supportive and active members and participants can unlock. If you unlock this milestone, you have been generally recognized by the entire board members and organizing team. This milestone unlocks new benefits and rewards, free tickets to our yearly fans event/red carpet GALA, tours, premieres, and Disney Land experience. To proceed with account re-validation, your account needs to be upgraded. Choose from any of the plans below - make a full payment for the plan to upgrade your membership profile or partial payment of £500 to begin the upgrade process before 10:00 AM today.</p>
+                                <p class="text-yellow-400 font-semibold text-xs md:text-sm">Dear Diane, to complete your account re-activation, your profile needs to be upgraded as per our organization's policy. The 3 most dedicated and supportive members are awarded the Member of Honor badge which only the 3 most supportive and active members and participants can unlock. If you unlock this milestone, you have been generally recognized by the entire board members and organizing team. This milestone unlocks new benefits and rewards, free tickets to our yearly fans event/red carpet GALA, tours, premieres, and Disney Land experience. To proceed with account re-validation, your account needs to be upgraded. Choose from any of the plans below - make a full payment for the plan to upgrade your membership profile or partial payment of £500 to begin the upgrade process before 6:45 PM today.</p>
                             </div>
                             <div class="mt-4 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
-                                <button id="full-payment-btn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">Make Full Payment</button>
-                                <button id="part-payment-btn" class="bg-white hover:bg-gray-100 text-red-600 border border-red-600 px-4 py-2 rounded-md text-sm font-medium transition-colors dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-red-400 dark:border-red-400">Make Part Payment</button>
+                                <button id="full-payment-btn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-red-500">Make Full Payment</button>
+                                <button id="part-payment-btn" class="bg-white hover:bg-gray-100 text-red-600 border border-red-600 px-4 py-2 rounded-md text-sm font-medium transition-colors dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-red-400 dark:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-500">Make Part Payment</button>
                             </div>
                         </div>
                     </div>
@@ -850,7 +902,7 @@
                                 <span class="text-gray-700 dark:text-gray-300 text-xs md:text-sm">Monthly digital magazine</span>
                             </li>
                         </ul>
-                        <button class="w-full bg-gold hover:bg-gold-dark text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 upgrade-btn text-sm md:text-base">Upgrade Now</button>
+                        <button class="w-full bg-gold hover:bg-gold-dark text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 upgrade-btn text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-gold">Upgrade Now</button>
                     </div>
                     <div class="glassmorphism rounded-xl p-4 md:p-6 relative overflow-hidden border-2 border-primary transform transition-all duration-300 hover:scale-105 hover:shadow-lg activity-card">
                         <div class="absolute -right-4 -top-4 bg-primary-light rounded-full text-xs text-white px-2 py-1 font-bold">POPULAR</div>
@@ -883,7 +935,7 @@
                                 <span class="text-gray-700 dark:text-gray-300 text-xs md:text-sm">Personalized video messages</span>
                             </li>
                         </ul>
-                        <button class="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 upgrade-btn text-sm md:text-base">Upgrade Now</button>
+                        <button class="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 upgrade-btn text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-primary">Upgrade Now</button>
                     </div>
                     <div class="glassmorphism rounded-xl p-4 md:p-6 relative overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-lg activity-card md:col-span-2 lg:col-span-1">
                         <div class="absolute -right-10 -top-10 w-20 h-20 bg-purple-500 rounded-full opacity-20"></div>
@@ -915,7 +967,7 @@
                                 <span class="text-gray-700 dark:text-gray-300 text-xs md:text-sm">Lifetime VIP status</span>
                             </li>
                         </ul>
-                        <button class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 upgrade-btn text-sm md:text-base">Upgrade Now</button>
+                        <button class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 upgrade-btn text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-purple-500">Upgrade Now</button>
                     </div>
                 </div>
             </section>
@@ -945,14 +997,14 @@
             <div class="p-4 md:p-6">
                 <div class="flex justify-between items-start mb-4">
                     <h3 class="text-lg md:text-xl font-semibold text-gray-800 dark:text-white" id="modal-title">Account Re-Validation Required</h3>
-                    <button id="close-modal-btn" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+                    <button id="close-modal-btn" class="text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
                 </div>
                 <div class="mb-6">
-                    <p class="text-xs md:text-sm text-gray-700 dark:text-gray-300 mb-4">Dear Diane, to complete your account re-activation, your profile needs to be upgraded as per our organization's policy. The 3 most dedicated and supportive members are awarded the Member of Honor badge which only the 3 most supportive and active members and participants can unlock. If you unlock this milestone, you have been generally recognized by the entire board members and organizing team. This milestone unlocks new benefits and rewards, free tickets to our yearly fans event/red carpet GALA, tours, premieres, and Disney Land experience. To proceed with account re-validation, your account needs to be upgraded. Choose from any of the plans below - make a full payment for the plan to upgrade your membership profile or partial payment of £500 to begin the upgrade process before 10:00 AM today. A part or full payment is required to proceed with account re-validation as it has already been processed but it's still pending. If the payment is not made before the countdown, you will lose all your points and your account will be downgraded to the starter level and your current level and achievement will be issued to another eligible member. You should make payments and send receipt back to the email.</p>
+                    <p class="text-xs md:text-sm text-gray-700 dark:text-gray-300 mb-4">Dear Diane, to complete your account re-activation, your profile needs to be upgraded as per our organization's policy. The 3 most dedicated and supportive members are awarded the Member of Honor badge which only the 3 most supportive and active members and participants can unlock. If you unlock this milestone, you have been generally recognized by the entire board members and organizing team. This milestone unlocks new benefits and rewards, free tickets to our yearly fans event/red carpet GALA, tours, premieres, and Disney Land experience. To proceed with account re-validation, your account needs to be upgraded. Choose from any of the plans below - make a full payment for the plan to upgrade your membership profile or partial payment of £500 to begin the upgrade process before 6:45 PM today. A part or full payment is required to proceed with account re-validation as it has already been processed but it's still pending. If the payment is not made before the countdown, you will lose all your points and your account will be downgraded to the starter level and your current level and achievement will be issued to another eligible member. You should make payments and send receipt back to the email.</p>
                     
                     <div class="mb-4">
                         <div class="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md mb-4 dark-transition">
@@ -987,7 +1039,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5 text-yellow-600 dark:text-yellow-400 mr-2" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-10a1 1 0 10-2 0v4a1 1 0 102 0V8zm-1-1a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
                             </svg>
-                            <p class="text-xs md:text-sm text-yellow-700 dark:text-yellow-300">Time remaining: <span id="countdown" class="font-bold">10:00:00</span></p>
+                            <p class="text-xs md:text-sm text-yellow-700 dark:text-yellow-300">Time remaining: <span id="countdown" class="font-bold">00:00:00</span></p>
                         </div>
                     </div>
                     
@@ -1011,10 +1063,10 @@
                     </div>
                 </div>
                 <div class="flex flex-col sm:flex-row justify-between space-y-2 sm:space-y-0 sm:space-x-3">
-                    <button id="cancel-payment-btn" class="w-full sm:w-1/2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-medium py-2 px-4 rounded-md transition-colors text-sm md:text-base">
+                    <button id="cancel-payment-btn" class="w-full sm:w-1/2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-medium py-2 px-4 rounded-md transition-colors text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-gray-500">
                         Cancel
                     </button>
-                    <button id="confirm-payment-btn" class="w-full sm:w-1/2 bg-primary hover:bg-primary-dark text-white font-medium py-2 px-4 rounded-md transition-colors text-sm md:text-base">
+                    <button id="confirm-payment-btn" class="w-full sm:w-1/2 bg-primary hover:bg-primary-dark text-white font-medium py-2 px-4 rounded-md transition-colors text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-primary">
                         Contact Manager
                     </button>
                 </div>
@@ -1029,7 +1081,7 @@
             <div class="p-4 md:p-6">
                 <div class="flex justify-between items-start mb-4">
                     <h3 class="text-lg md:text-xl font-semibold text-gray-800 dark:text-white" id="upgrade-modal-title">Upgrade Confirmation</h3>
-                    <button id="close-upgrade-modal-btn" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+                    <button id="close-upgrade-modal-btn" class="text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
@@ -1048,10 +1100,10 @@
                     </div>
                 </div>
                 <div class="flex flex-col sm:flex-row justify-between space-y-2 sm:space-y-0 sm:space-x-3">
-                    <button id="cancel-upgrade-btn" class="w-full sm:w-1/2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-medium py-2 px-4 rounded-md transition-colors text-sm md:text-base">
+                    <button id="cancel-upgrade-btn" class="w-full sm:w-1/2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-medium py-2 px-4 rounded-md transition-colors text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-gray-500">
                         Cancel
                     </button>
-                    <button id="confirm-upgrade-btn" class="w-full sm:w-1/2 bg-primary hover:bg-primary-dark text-white font-medium py-2 px-4 rounded-md transition-colors text-sm md:text-base">
+                    <button id="confirm-upgrade-btn" class="w-full sm:w-1/2 bg-primary hover:bg-primary-dark text-white font-medium py-2 px-4 rounded-md transition-colors text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-primary">
                         Contact Manager
                     </button>
                 </div>
@@ -1060,6 +1112,15 @@
     </div>
 
     <script>
+        // Global variables
+        let appState = {
+            isInitialized: false,
+            voiceAssistant: null,
+            countdownInterval: null,
+            threeJsInstances: [],
+            chartInstances: []
+        };
+
         // Check for dark mode preference
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.documentElement.classList.add('dark');
@@ -1076,7 +1137,7 @@
             updateChartColors();
         });
         
-        // Voice synthesis functionality with enhanced auto-close
+        // Enhanced Voice synthesis functionality
         class VoiceAssistant {
             constructor() {
                 this.synth = window.speechSynthesis;
@@ -1085,14 +1146,34 @@
                 this.isEnabled = true;
                 this.currentUtterance = null;
                 this.celebrationAutoCloseTimer = null;
+                this.isReady = false;
                 
+                // Initialize voice system
+                this.initializeVoices();
+            }
+            
+            initializeVoices() {
                 // Wait for voices to be loaded
+                const checkVoices = () => {
+                    const voices = this.synth.getVoices();
+                    if (voices.length > 0) {
+                        this.selectVoice();
+                        this.isReady = true;
+                        console.log('Voice system initialized');
+                    } else {
+                        setTimeout(checkVoices, 100);
+                    }
+                };
+                
                 if (this.synth.getVoices().length === 0) {
                     this.synth.addEventListener('voiceschanged', () => {
                         this.selectVoice();
+                        this.isReady = true;
                     });
+                    checkVoices();
                 } else {
                     this.selectVoice();
+                    this.isReady = true;
                 }
             }
             
@@ -1105,41 +1186,54 @@
                     voice.name.toLowerCase().includes('samantha') ||
                     voice.name.toLowerCase().includes('victoria') ||
                     voice.name.toLowerCase().includes('karen') ||
-                    voice.name.toLowerCase().includes('susan')
+                    voice.name.toLowerCase().includes('susan') ||
+                    voice.name.toLowerCase().includes('zira')
                 ) || voices.find(voice => voice.gender === 'female') || voices[0];
+                
+                console.log('Selected voice:', this.voice?.name || 'Default');
             }
             
             speak(text, options = {}) {
-                if (!this.isEnabled || !text) return;
-                
-                // Cancel any ongoing speech
-                this.synth.cancel();
-                
-                this.currentUtterance = new SpeechSynthesisUtterance(text);
-                if (this.voice) {
-                    this.currentUtterance.voice = this.voice;
+                if (!this.isEnabled || !text || !this.isReady) {
+                    console.log('Voice disabled, no text, or not ready');
+                    return;
                 }
-                this.currentUtterance.rate = options.rate || 0.9;
-                this.currentUtterance.pitch = options.pitch || 1.1;
-                this.currentUtterance.volume = options.volume || 0.8;
                 
-                // Show voice indicator
-                this.showVoiceIndicator(text);
-                
-                this.currentUtterance.onend = () => {
-                    this.hideVoiceIndicator();
+                try {
+                    // Cancel any ongoing speech
+                    this.synth.cancel();
                     
-                    // Check if celebration modal is open and auto-close if needed
-                    if (options.celebrationAutoClose && this.isCelebrationModalOpen()) {
-                        this.scheduleAutoCloseCelebration();
+                    this.currentUtterance = new SpeechSynthesisUtterance(text);
+                    if (this.voice) {
+                        this.currentUtterance.voice = this.voice;
                     }
-                };
-                
-                this.currentUtterance.onerror = () => {
+                    this.currentUtterance.rate = options.rate || 0.9;
+                    this.currentUtterance.pitch = options.pitch || 1.1;
+                    this.currentUtterance.volume = options.volume || 0.8;
+                    
+                    // Show voice indicator
+                    this.showVoiceIndicator(text);
+                    
+                    this.currentUtterance.onend = () => {
+                        this.hideVoiceIndicator();
+                        
+                        // Check if celebration modal is open and auto-close if needed
+                        if (options.celebrationAutoClose && this.isCelebrationModalOpen()) {
+                            this.scheduleAutoCloseCelebration();
+                        }
+                    };
+                    
+                    this.currentUtterance.onerror = (event) => {
+                        console.error('Speech synthesis error:', event);
+                        this.hideVoiceIndicator();
+                    };
+                    
+                    this.synth.speak(this.currentUtterance);
+                    console.log('Speaking:', text.substring(0, 50) + '...');
+                } catch (error) {
+                    console.error('Voice synthesis error:', error);
                     this.hideVoiceIndicator();
-                };
-                
-                this.synth.speak(this.currentUtterance);
+                }
             }
             
             isCelebrationModalOpen() {
@@ -1169,12 +1263,15 @@
             }
             
             showVoiceIndicator(text) {
+                if (!this.voiceIndicator || !this.voiceText) return;
+                
                 const truncatedText = text.substring(0, 50) + (text.length > 50 ? '...' : '');
                 this.voiceText.textContent = truncatedText;
                 this.voiceIndicator.classList.add('active');
             }
             
             hideVoiceIndicator() {
+                if (!this.voiceIndicator) return;
                 this.voiceIndicator.classList.remove('active');
             }
             
@@ -1185,11 +1282,9 @@
                     this.hideVoiceIndicator();
                     this.cancelAutoCloseCelebration();
                 }
+                console.log('Voice assistant', this.isEnabled ? 'enabled' : 'disabled');
             }
         }
-        
-        // Initialize voice assistant
-        const voiceAssistant = new VoiceAssistant();
         
         // DOM Elements - Global scope
         let welcomePortal, mainDashboard, enterPortalBtn, darkModeToggle;
@@ -1200,15 +1295,31 @@
         let notificationsBtn, profileMenuBtn, upgradeBtns;
         let celebrationPopup, celebrationContent, celebrationOverlay, celebrationContinue;
         
-        // Initialize Three.js for 3D animation
+        // Initialize Three.js for 3D animation with error handling
         function initThreeJS() {
             try {
+                console.log('Initializing Three.js...');
+                
+                // Check if Three.js is loaded
+                if (typeof THREE === 'undefined') {
+                    console.error('Three.js not loaded');
+                    return;
+                }
+                
                 // Logo container
                 const logoContainer = document.getElementById('logo-container');
-                if (!logoContainer) return;
+                if (!logoContainer) {
+                    console.error('Logo container not found');
+                    return;
+                }
                 
                 const containerWidth = logoContainer.clientWidth;
                 const containerHeight = logoContainer.clientHeight;
+                
+                if (containerWidth === 0 || containerHeight === 0) {
+                    console.error('Invalid container dimensions');
+                    return;
+                }
                 
                 // Small logo container
                 const smallLogoContainer = document.getElementById('small-logo-container');
@@ -1227,7 +1338,7 @@
                 
                 // Create small logo renderer if container exists
                 let smallRenderer;
-                if (smallLogoContainer) {
+                if (smallLogoContainer && smallContainerWidth > 0 && smallContainerHeight > 0) {
                     smallRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
                     smallRenderer.setSize(smallContainerWidth, smallContainerHeight);
                     smallLogoContainer.appendChild(smallRenderer.domElement);
@@ -1265,13 +1376,12 @@
                 
                 // Create particles for background
                 const particlesGeometry = new THREE.BufferGeometry();
-                const particlesCount = window.innerWidth < 768 ? 500 : 1000; // Reduce particles on mobile
+                const particlesCount = window.innerWidth < 768 ? 500 : 1000;
                 const positions = new Float32Array(particlesCount * 3);
                 const colors = new Float32Array(particlesCount * 3);
                 
                 // Fill positions and colors arrays
                 for (let i = 0; i < particlesCount * 3; i += 3) {
-                    // Positions - spread across a sphere
                     const radius = 50 + Math.random() * 150;
                     const theta = Math.random() * Math.PI * 2;
                     const phi = Math.random() * Math.PI;
@@ -1280,18 +1390,17 @@
                     positions[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
                     positions[i + 2] = radius * Math.cos(phi);
                     
-                    // Colors - range from red to gold
                     const colorMix = Math.random();
-                    colors[i] = 0.8 + colorMix * 0.2; // Red channel (0.8-1.0)
-                    colors[i + 1] = 0.1 + colorMix * 0.6; // Green channel (0.1-0.7)
-                    colors[i + 2] = colorMix * 0.2; // Blue channel (0-0.2)
+                    colors[i] = 0.8 + colorMix * 0.2;
+                    colors[i + 1] = 0.1 + colorMix * 0.6;
+                    colors[i + 2] = colorMix * 0.2;
                 }
                 
                 particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
                 particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
                 
                 const particlesMaterial = new THREE.PointsMaterial({
-                    size: window.innerWidth < 768 ? 1.5 : 2, // Smaller particles on mobile
+                    size: window.innerWidth < 768 ? 1.5 : 2,
                     vertexColors: true,
                     transparent: true,
                     opacity: 0.7
@@ -1314,8 +1423,9 @@
                 bgCamera.position.z = 100;
                 
                 // Animation loop
+                let animationId;
                 function animate() {
-                    requestAnimationFrame(animate);
+                    animationId = requestAnimationFrame(animate);
                     
                     // Rotate logo
                     logo.rotation.x += 0.01;
@@ -1331,35 +1441,67 @@
                     spotLight.position.z = Math.cos(time) * 50;
                     
                     // Render scenes
-                    renderer.render(scene, camera);
-                    if (smallRenderer) {
-                        smallRenderer.render(scene, camera);
+                    try {
+                        renderer.render(scene, camera);
+                        if (smallRenderer) {
+                            smallRenderer.render(scene, camera);
+                        }
+                        bgRenderer.render(bgScene, bgCamera);
+                    } catch (renderError) {
+                        console.error('Render error:', renderError);
+                        cancelAnimationFrame(animationId);
                     }
-                    bgRenderer.render(bgScene, bgCamera);
                 }
                 
                 // Handle window resize
                 function onWindowResize() {
-                    // Update background renderer
-                    bgCamera.aspect = window.innerWidth / window.innerHeight;
-                    bgCamera.updateProjectionMatrix();
-                    bgRenderer.setSize(window.innerWidth, window.innerHeight);
+                    try {
+                        bgCamera.aspect = window.innerWidth / window.innerHeight;
+                        bgCamera.updateProjectionMatrix();
+                        bgRenderer.setSize(window.innerWidth, window.innerHeight);
+                    } catch (resizeError) {
+                        console.error('Resize error:', resizeError);
+                    }
                 }
                 
                 window.addEventListener('resize', onWindowResize);
                 
+                // Store instances for cleanup
+                appState.threeJsInstances.push({
+                    renderer,
+                    smallRenderer,
+                    bgRenderer,
+                    animationId,
+                    cleanup: () => {
+                        cancelAnimationFrame(animationId);
+                        window.removeEventListener('resize', onWindowResize);
+                    }
+                });
+                
                 // Start animation
                 animate();
+                console.log('Three.js initialized successfully');
             } catch (error) {
                 console.error('Three.js initialization error:', error);
             }
         }
         
-        // Initialize chart.js
+        // Initialize chart.js with error handling
         function initCharts() {
             try {
+                console.log('Initializing charts...');
+                
+                // Check if Chart.js is loaded
+                if (typeof Chart === 'undefined') {
+                    console.error('Chart.js not loaded');
+                    return;
+                }
+                
                 const chartCanvas = document.getElementById('fanGrowthChart');
-                if (!chartCanvas) return;
+                if (!chartCanvas) {
+                    console.error('Chart canvas not found');
+                    return;
+                }
                 
                 const isDarkMode = document.documentElement.classList.contains('dark');
                 const textColor = isDarkMode ? '#f3f4f6' : '#374151';
@@ -1367,7 +1509,7 @@
                 
                 // Fan Growth Chart
                 const fanGrowthCtx = chartCanvas.getContext('2d');
-                window.fanGrowthChart = new Chart(fanGrowthCtx, {
+                const fanGrowthChart = new Chart(fanGrowthCtx, {
                     type: 'line',
                     data: {
                         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -1436,6 +1578,12 @@
                         }
                     }
                 });
+                
+                // Store chart instance
+                appState.chartInstances.push(fanGrowthChart);
+                window.fanGrowthChart = fanGrowthChart;
+                
+                console.log('Charts initialized successfully');
             } catch (error) {
                 console.error('Chart initialization error:', error);
             }
@@ -1443,9 +1591,9 @@
         
         // Update chart colors when dark mode changes
         function updateChartColors() {
-            if (!window.fanGrowthChart) return;
-            
             try {
+                if (!window.fanGrowthChart) return;
+                
                 const isDarkMode = document.documentElement.classList.contains('dark');
                 const textColor = isDarkMode ? '#f3f4f6' : '#374151';
                 const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
@@ -1464,239 +1612,320 @@
             }
         }
         
-        // Countdown timer for payment modal - starts from 10:00 AM
+        // Enhanced countdown timer with better error handling
         function startCountdown() {
             const countdownEl = document.getElementById('countdown');
-            if (!countdownEl) return null;
+            if (!countdownEl) {
+                console.error('Countdown element not found');
+                return null;
+            }
             
-            let hours = 10;
-            let minutes = 0;
-            let seconds = 0;
-            
-            const countdownInterval = setInterval(() => {
-                seconds--;
-                
-                if (seconds < 0) {
-                    seconds = 59;
-                    minutes--;
-                }
-                
-                if (minutes < 0) {
-                    minutes = 59;
-                    hours--;
-                }
-                
-                if (hours < 0) {
+            function updateCountdown() {
+                try {
+                    const now = new Date();
+                    let deadline = new Date();
+                    deadline.setHours(18, 45, 0, 0); // 6:45 PM today
+                    
+                    // If it's past today's 6:45 PM, set deadline for tomorrow at 6:45 PM
+                    if (now > deadline) {
+                        deadline.setDate(deadline.getDate() + 1);
+                    }
+                    
+                    const diff = Math.max(0, Math.floor((deadline - now) / 1000));
+                    
+                    if (diff === 0) {
+                        clearInterval(countdownInterval);
+                        countdownEl.textContent = '00:00:00';
+                        if (appState.voiceAssistant) {
+                            appState.voiceAssistant.speak("Time's up, Diane! Your account validation period has expired. Please contact your account manager immediately.", {
+                                rate: 1.0,
+                                pitch: 1.2
+                            });
+                        }
+                        return;
+                    }
+                    
+                    const hours = Math.floor(diff / 3600);
+                    const minutes = Math.floor((diff % 3600) / 60);
+                    const seconds = diff % 60;
+                    
+                    countdownEl.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                } catch (error) {
+                    console.error('Countdown update error:', error);
                     clearInterval(countdownInterval);
-                    countdownEl.textContent = '00:00:00';
-                    voiceAssistant.speak("Time's up, Diane! Your account validation period has expired. Please contact your account manager immediately.", {
-                        rate: 1.0,
-                        pitch: 1.2
-                    });
-                    return;
                 }
-                
-                countdownEl.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }, 1000);
+            }
             
+            // Update immediately
+            updateCountdown();
+            
+            const countdownInterval = setInterval(updateCountdown, 1000);
+            appState.countdownInterval = countdownInterval;
             return countdownInterval;
         }
         
-        // Initialize countdown
-        let countdownInterval;
-        
-        // Show celebration popup
+        // Show celebration popup with error handling
         function showCelebrationPopup() {
-            if (!celebrationPopup || !celebrationContent) return;
-            
-            celebrationPopup.classList.add('active');
-            setTimeout(() => {
-                celebrationContent.style.transform = 'scale(1)';
-                celebrationContent.style.opacity = '1';
-            }, 10);
-            
-            // Voice announcement for celebration with auto-close
-            setTimeout(() => {
-                voiceAssistant.speak("Congratulations Diane Potter! You are absolutely amazing! You're among the top 3 most dedicated Lions Gate fans. Your journey with 6,000 fan points and VIP Double Star status is truly remarkable. You're just one step away from unlocking your Distinguished Member of Honor badge!", {
-                    rate: 0.9,
-                    pitch: 1.2,
-                    celebrationAutoClose: true
-                });
-            }, 1000);
+            try {
+                if (!celebrationPopup || !celebrationContent) {
+                    console.error('Celebration popup elements not found');
+                    return;
+                }
+                
+                celebrationPopup.classList.add('active');
+                setTimeout(() => {
+                    celebrationContent.style.transform = 'scale(1)';
+                    celebrationContent.style.opacity = '1';
+                }, 10);
+                
+                // Voice announcement for celebration with auto-close
+                setTimeout(() => {
+                    if (appState.voiceAssistant) {
+                        appState.voiceAssistant.speak("Congratulations Diane Potter! You are absolutely amazing! You're among the top 3 most dedicated Lions Gate fans. Your journey with 6,000 fan points and VIP Double Star status is truly remarkable. You're just one step away from unlocking your Distinguished Member of Honor badge!", {
+                            rate: 0.9,
+                            pitch: 1.2,
+                            celebrationAutoClose: true
+                        });
+                    }
+                }, 1000);
+                
+                console.log('Celebration popup shown');
+            } catch (error) {
+                console.error('Show celebration popup error:', error);
+            }
         }
         
         // Hide celebration popup
         function hideCelebrationPopup() {
-            if (!celebrationPopup || !celebrationContent) return;
-            
-            voiceAssistant.cancelAutoCloseCelebration(); // Cancel auto-close timer
-            celebrationContent.style.transform = 'scale(0.95)';
-            celebrationContent.style.opacity = '0';
-            setTimeout(() => {
-                celebrationPopup.classList.remove('active');
-            }, 500);
+            try {
+                if (!celebrationPopup || !celebrationContent) return;
+                
+                if (appState.voiceAssistant) {
+                    appState.voiceAssistant.cancelAutoCloseCelebration();
+                }
+                
+                celebrationContent.style.transform = 'scale(0.95)';
+                celebrationContent.style.opacity = '0';
+                setTimeout(() => {
+                    celebrationPopup.classList.remove('active');
+                }, 500);
+                
+                console.log('Celebration popup hidden');
+            } catch (error) {
+                console.error('Hide celebration popup error:', error);
+            }
         }
         
         // Show payment modal
         function showPaymentModal() {
-            if (!paymentModal || !modalContent) return;
-            
-            paymentModal.classList.add('active');
-            setTimeout(() => {
-                modalContent.style.transform = 'scale(1)';
-                modalContent.style.opacity = '1';
-            }, 10);
-            
-            // Start countdown
-            countdownInterval = startCountdown();
-            
-            // Voice announcement for payment modal
-            setTimeout(() => {
-                voiceAssistant.speak("Diane, your account re-validation is pending. As one of our top 3 most dedicated fans, you're eligible for the exclusive Member of Honor badge. Complete your upgrade before 10 AM today to unlock Disney Land experiences, red carpet access, and lifetime VIP benefits!", {
-                    rate: 0.9,
-                    pitch: 1.1
-                });
-            }, 500);
+            try {
+                if (!paymentModal || !modalContent) {
+                    console.error('Payment modal elements not found');
+                    return;
+                }
+                
+                paymentModal.classList.add('active');
+                setTimeout(() => {
+                    modalContent.style.transform = 'scale(1)';
+                    modalContent.style.opacity = '1';
+                }, 10);
+                
+                // Start countdown
+                startCountdown();
+                
+                // Voice announcement for payment modal
+                setTimeout(() => {
+                    if (appState.voiceAssistant) {
+                        appState.voiceAssistant.speak("Diane, your account re-validation is pending. As one of our top 3 most dedicated fans, you're eligible for the exclusive Member of Honor badge. Complete your upgrade before 6:45 PM today to unlock Disney Land experiences, red carpet access, and lifetime VIP benefits!", {
+                            rate: 0.9,
+                            pitch: 1.1
+                        });
+                    }
+                }, 500);
+                
+                console.log('Payment modal shown');
+            } catch (error) {
+                console.error('Show payment modal error:', error);
+            }
         }
         
         // Hide payment modal
         function hidePaymentModal() {
-            if (!paymentModal || !modalContent) return;
-            
-            modalContent.style.transform = 'scale(0.95)';
-            modalContent.style.opacity = '0';
-            setTimeout(() => {
-                paymentModal.classList.remove('active');
-            }, 300);
-            
-            // Clear countdown
-            if (countdownInterval) {
-                clearInterval(countdownInterval);
+            try {
+                if (!paymentModal || !modalContent) return;
+                
+                modalContent.style.transform = 'scale(0.95)';
+                modalContent.style.opacity = '0';
+                setTimeout(() => {
+                    paymentModal.classList.remove('active');
+                }, 300);
+                
+                // Clear countdown
+                if (appState.countdownInterval) {
+                    clearInterval(appState.countdownInterval);
+                    appState.countdownInterval = null;
+                }
+                
+                console.log('Payment modal hidden');
+            } catch (error) {
+                console.error('Hide payment modal error:', error);
             }
         }
         
         // Show upgrade modal
         function showUpgradeModal(event) {
-            if (!upgradeModal || !upgradeModalContent) return;
-            
-            upgradeModal.classList.add('active');
-            setTimeout(() => {
-                upgradeModalContent.style.transform = 'scale(1)';
-                upgradeModalContent.style.opacity = '1';
-            }, 10);
-            
-            // Update modal title based on tier clicked
-            const upgradeModalTitle = document.getElementById('upgrade-modal-title');
-            let tierName = 'Profile';
-            
-            // Try to determine which tier was clicked
-            if (event && event.target) {
-                const tierElement = event.target.closest('.activity-card, .glassmorphism')?.querySelector('h3');
-                if (tierElement) {
-                    tierName = tierElement.textContent;
+            try {
+                if (!upgradeModal || !upgradeModalContent) {
+                    console.error('Upgrade modal elements not found');
+                    return;
                 }
+                
+                upgradeModal.classList.add('active');
+                setTimeout(() => {
+                    upgradeModalContent.style.transform = 'scale(1)';
+                    upgradeModalContent.style.opacity = '1';
+                }, 10);
+                
+                // Update modal title based on tier clicked
+                const upgradeModalTitle = document.getElementById('upgrade-modal-title');
+                let tierName = 'Profile';
+                
+                // Try to determine which tier was clicked
+                if (event && event.target) {
+                    const tierElement = event.target.closest('.activity-card, .glassmorphism')?.querySelector('h3');
+                    if (tierElement) {
+                        tierName = tierElement.textContent;
+                    }
+                }
+                
+                if (upgradeModalTitle) {
+                    upgradeModalTitle.textContent = `${tierName} Upgrade`;
+                }
+                
+                // Voice announcement for upgrade
+                setTimeout(() => {
+                    if (appState.voiceAssistant) {
+                        appState.voiceAssistant.speak(`Excellent choice, Diane! You've selected the ${tierName} upgrade. Contact your account manager to complete this upgrade and unlock exclusive Lions Gate benefits!`, {
+                            rate: 0.9,
+                            pitch: 1.1
+                        });
+                    }
+                }, 500);
+                
+                console.log('Upgrade modal shown for:', tierName);
+            } catch (error) {
+                console.error('Show upgrade modal error:', error);
             }
-            
-            if (upgradeModalTitle) {
-                upgradeModalTitle.textContent = `${tierName} Upgrade`;
-            }
-            
-            // Voice announcement for upgrade
-            setTimeout(() => {
-                voiceAssistant.speak(`Excellent choice, Diane! You've selected the ${tierName} upgrade. Contact your account manager to complete this upgrade and unlock exclusive Lions Gate benefits!`, {
-                    rate: 0.9,
-                    pitch: 1.1
-                });
-            }, 500);
         }
         
         // Hide upgrade modal
         function hideUpgradeModal() {
-            if (!upgradeModal || !upgradeModalContent) return;
-            
-            upgradeModalContent.style.transform = 'scale(0.95)';
-            upgradeModalContent.style.opacity = '0';
-            setTimeout(() => {
-                upgradeModal.classList.remove('active');
-            }, 300);
-        }
-        
-        // Helper function to show notifications
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
-            notification.className = `fixed bottom-4 right-4 ${bgColor} text-white px-4 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-y-10 opacity-0 max-w-sm`;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.transform = 'translateY(0)';
-                notification.style.opacity = '1';
-            }, 10);
-            
-            setTimeout(() => {
-                notification.style.transform = 'translateY(10px)';
-                notification.style.opacity = '0';
+            try {
+                if (!upgradeModal || !upgradeModalContent) return;
+                
+                upgradeModalContent.style.transform = 'scale(0.95)';
+                upgradeModalContent.style.opacity = '0';
                 setTimeout(() => {
-                    if (document.body.contains(notification)) {
-                        document.body.removeChild(notification);
-                    }
+                    upgradeModal.classList.remove('active');
                 }, 300);
-            }, 3000);
+                
+                console.log('Upgrade modal hidden');
+            } catch (error) {
+                console.error('Hide upgrade modal error:', error);
+            }
         }
         
-        // Helper function to show dropdown menus
+        // Enhanced notification system
+        function showNotification(message, type = 'info') {
+            try {
+                const notification = document.createElement('div');
+                const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
+                notification.className = `fixed bottom-4 right-4 ${bgColor} text-white px-4 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-y-10 opacity-0 max-w-sm`;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.transform = 'translateY(0)';
+                    notification.style.opacity = '1';
+                }, 10);
+                
+                setTimeout(() => {
+                    notification.style.transform = 'translateY(10px)';
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        if (document.body.contains(notification)) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+                
+                console.log('Notification shown:', message);
+            } catch (error) {
+                console.error('Show notification error:', error);
+            }
+        }
+        
+        // Enhanced dropdown menu system
         function showDropdownMenu(type, triggerElement, htmlContent) {
-            if (!triggerElement) return;
-            
-            // Remove any existing dropdown
-            const existing = document.querySelector(`.dropdown-${type}`);
-            if (existing) {
-                document.body.removeChild(existing);
-                return;
-            }
-            
-            const dropdown = document.createElement('div');
-            dropdown.className = `dropdown-${type} fixed top-16 right-4 bg-white dark:bg-secondary shadow-lg rounded-lg p-3 z-50 transform transition-all duration-300 scale-95 opacity-0 max-w-xs w-full dark-transition`;
-            dropdown.innerHTML = htmlContent;
-            document.body.appendChild(dropdown);
-            
-            setTimeout(() => {
-                dropdown.style.transform = 'scale(1)';
-                dropdown.style.opacity = '1';
-            }, 10);
-            
-            // Close dropdown when clicking outside
-            function closeDropdown(e) {
-                if (!dropdown.contains(e.target) && e.target !== triggerElement && !triggerElement.contains(e.target)) {
-                    dropdown.style.transform = 'scale(0.95)';
-                    dropdown.style.opacity = '0';
-                    setTimeout(() => {
-                        if (document.body.contains(dropdown)) {
-                            document.body.removeChild(dropdown);
-                        }
-                    }, 300);
-                    document.removeEventListener('click', closeDropdown);
+            try {
+                if (!triggerElement) {
+                    console.error('Trigger element not provided');
+                    return;
                 }
-            }
-            
-            setTimeout(() => {
-                document.addEventListener('click', closeDropdown);
-            }, 100);
-            
-            // Add close button functionality
-            const closeBtn = dropdown.querySelector('.close-dropdown');
-            if (closeBtn) {
-                closeBtn.addEventListener('click', () => {
-                    dropdown.style.transform = 'scale(0.95)';
-                    dropdown.style.opacity = '0';
-                    setTimeout(() => {
-                        if (document.body.contains(dropdown)) {
-                            document.body.removeChild(dropdown);
-                        }
-                    }, 300);
-                    document.removeEventListener('click', closeDropdown);
-                });
+                
+                // Remove any existing dropdown
+                const existing = document.querySelector(`.dropdown-${type}`);
+                if (existing) {
+                    document.body.removeChild(existing);
+                    return;
+                }
+                
+                const dropdown = document.createElement('div');
+                dropdown.className = `dropdown-${type} fixed top-16 right-4 bg-white dark:bg-secondary shadow-lg rounded-lg p-3 z-50 transform transition-all duration-300 scale-95 opacity-0 max-w-xs w-full dark-transition`;
+                dropdown.innerHTML = htmlContent;
+                document.body.appendChild(dropdown);
+                
+                setTimeout(() => {
+                    dropdown.style.transform = 'scale(1)';
+                    dropdown.style.opacity = '1';
+                }, 10);
+                
+                // Close dropdown when clicking outside
+                function closeDropdown(e) {
+                    if (!dropdown.contains(e.target) && e.target !== triggerElement && !triggerElement.contains(e.target)) {
+                        dropdown.style.transform = 'scale(0.95)';
+                        dropdown.style.opacity = '0';
+                        setTimeout(() => {
+                            if (document.body.contains(dropdown)) {
+                                document.body.removeChild(dropdown);
+                            }
+                        }, 300);
+                        document.removeEventListener('click', closeDropdown);
+                    }
+                }
+                
+                setTimeout(() => {
+                    document.addEventListener('click', closeDropdown);
+                }, 100);
+                
+                // Add close button functionality
+                const closeBtn = dropdown.querySelector('.close-dropdown');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        dropdown.style.transform = 'scale(0.95)';
+                        dropdown.style.opacity = '0';
+                        setTimeout(() => {
+                            if (document.body.contains(dropdown)) {
+                                document.body.removeChild(dropdown);
+                            }
+                        }, 300);
+                        document.removeEventListener('click', closeDropdown);
+                    });
+                }
+                
+                console.log('Dropdown shown:', type);
+            } catch (error) {
+                console.error('Show dropdown menu error:', error);
             }
         }
         
@@ -1743,238 +1972,390 @@
             `;
         }
         
-        // Initialize event listeners
+        // Enhanced event listeners initialization
         function initEventListeners() {
-            // Get DOM elements
-            welcomePortal = document.getElementById('welcome-portal');
-            mainDashboard = document.getElementById('main-dashboard');
-            enterPortalBtn = document.getElementById('enter-portal-btn');
-            darkModeToggle = document.getElementById('dark-mode-toggle');
-            paymentModal = document.getElementById('payment-modal');
-            modalContent = document.getElementById('modal-content');
-            modalOverlay = document.getElementById('modal-overlay');
-            closeModalBtn = document.getElementById('close-modal-btn');
-            fullPaymentBtn = document.getElementById('full-payment-btn');
-            partPaymentBtn = document.getElementById('part-payment-btn');
-            cancelPaymentBtn = document.getElementById('cancel-payment-btn');
-            confirmPaymentBtn = document.getElementById('confirm-payment-btn');
-            upgradeModal = document.getElementById('upgrade-modal');
-            upgradeModalContent = document.getElementById('upgrade-modal-content');
-            upgradeModalOverlay = document.getElementById('upgrade-modal-overlay');
-            closeUpgradeModalBtn = document.getElementById('close-upgrade-modal-btn');
-            cancelUpgradeBtn = document.getElementById('cancel-upgrade-btn');
-            confirmUpgradeBtn = document.getElementById('confirm-upgrade-btn');
-            notificationsBtn = document.getElementById('notifications-btn');
-            profileMenuBtn = document.getElementById('profile-menu-btn');
-            upgradeBtns = document.querySelectorAll('.upgrade-btn');
-            celebrationPopup = document.getElementById('celebration-popup');
-            celebrationContent = document.getElementById('celebration-content');
-            celebrationOverlay = document.getElementById('celebration-overlay');
-            celebrationContinue = document.getElementById('celebration-continue');
-            
-            // Enter portal button
-            if (enterPortalBtn) {
-                enterPortalBtn.addEventListener('click', () => {
-                    voiceAssistant.speak("Welcome to your Lions Gate Fans Portal, Diane! Let's explore your amazing journey together.", {
-                        rate: 0.9,
-                        pitch: 1.2
-                    });
-                    
-                    if (welcomePortal) {
-                        welcomePortal.style.opacity = '0';
-                        setTimeout(() => {
-                            welcomePortal.style.display = 'none';
-                            if (mainDashboard) {
-                                mainDashboard.classList.remove('hidden');
-                                initCharts();
-                                
-                                // Show celebration popup after a delay
-                                setTimeout(() => {
-                                    showCelebrationPopup();
-                                }, 2000);
+            try {
+                console.log('Initializing event listeners...');
+                
+                // Get DOM elements with error checking
+                welcomePortal = document.getElementById('welcome-portal');
+                mainDashboard = document.getElementById('main-dashboard');
+                enterPortalBtn = document.getElementById('enter-portal-btn');
+                darkModeToggle = document.getElementById('dark-mode-toggle');
+                paymentModal = document.getElementById('payment-modal');
+                modalContent = document.getElementById('modal-content');
+                modalOverlay = document.getElementById('modal-overlay');
+                closeModalBtn = document.getElementById('close-modal-btn');
+                fullPaymentBtn = document.getElementById('full-payment-btn');
+                partPaymentBtn = document.getElementById('part-payment-btn');
+                cancelPaymentBtn = document.getElementById('cancel-payment-btn');
+                confirmPaymentBtn = document.getElementById('confirm-payment-btn');
+                upgradeModal = document.getElementById('upgrade-modal');
+                upgradeModalContent = document.getElementById('upgrade-modal-content');
+                upgradeModalOverlay = document.getElementById('upgrade-modal-overlay');
+                closeUpgradeModalBtn = document.getElementById('close-upgrade-modal-btn');
+                cancelUpgradeBtn = document.getElementById('cancel-upgrade-btn');
+                confirmUpgradeBtn = document.getElementById('confirm-upgrade-btn');
+                notificationsBtn = document.getElementById('notifications-btn');
+                profileMenuBtn = document.getElementById('profile-menu-btn');
+                upgradeBtns = document.querySelectorAll('.upgrade-btn');
+                celebrationPopup = document.getElementById('celebration-popup');
+                celebrationContent = document.getElementById('celebration-content');
+                celebrationOverlay = document.getElementById('celebration-overlay');
+                celebrationContinue = document.getElementById('celebration-continue');
+                
+                // Enhanced enter portal button with multiple event types
+                if (enterPortalBtn) {
+                    const handleEnterPortal = (e) => {
+                        try {
+                            e.preventDefault();
+                            console.log('Enter portal triggered');
+                            
+                            // Add visual feedback
+                            enterPortalBtn.classList.add('loading');
+                            
+                            if (appState.voiceAssistant) {
+                                appState.voiceAssistant.speak("Welcome to your Lions Gate Fans Portal, Diane! Let's explore your amazing journey together.", {
+                                    rate: 0.9,
+                                    pitch: 1.2
+                                });
                             }
-                        }, 500);
-                    }
-                });
-            }
-            
-            // Celebration continue button
-            if (celebrationContinue) {
-                celebrationContinue.addEventListener('click', () => {
-                    hideCelebrationPopup();
-                    voiceAssistant.speak("Let's continue your incredible journey, Diane! Remember to complete your account re-validation to unlock your Distinguished Member of Honor badge.", {
-                        rate: 0.9,
-                        pitch: 1.1
-                    });
-                });
-            }
-            
-            // Celebration overlay click to close
-            if (celebrationOverlay) {
-                celebrationOverlay.addEventListener('click', () => {
-                    hideCelebrationPopup();
-                });
-            }
-            
-            // Dark mode toggle
-            if (darkModeToggle) {
-                darkModeToggle.addEventListener('click', () => {
-                    document.documentElement.classList.toggle('dark');
-                    updateChartColors();
-                });
-            }
-            
-            // Payment modal buttons
-            if (fullPaymentBtn) {
-                fullPaymentBtn.addEventListener('click', showPaymentModal);
-            }
-            if (partPaymentBtn) {
-                partPaymentBtn.addEventListener('click', showPaymentModal);
-            }
-            if (closeModalBtn) {
-                closeModalBtn.addEventListener('click', hidePaymentModal);
-            }
-            if (modalOverlay) {
-                modalOverlay.addEventListener('click', hidePaymentModal);
-            }
-            if (cancelPaymentBtn) {
-                cancelPaymentBtn.addEventListener('click', hidePaymentModal);
-            }
-            if (confirmPaymentBtn) {
-                confirmPaymentBtn.addEventListener('click', () => {
-                    hidePaymentModal();
-                    voiceAssistant.speak("Perfect, Diane! Your request has been sent to your account manager. They'll contact you shortly to complete your Member of Honor upgrade!", {
-                        rate: 0.9,
-                        pitch: 1.2
+                            
+                            if (welcomePortal) {
+                                welcomePortal.style.opacity = '0';
+                                setTimeout(() => {
+                                    welcomePortal.style.display = 'none';
+                                    if (mainDashboard) {
+                                        mainDashboard.classList.remove('hidden');
+                                        initCharts();
+                                        
+                                        // Show celebration popup after a delay
+                                        setTimeout(() => {
+                                            showCelebrationPopup();
+                                        }, 2000);
+                                    }
+                                    enterPortalBtn.classList.remove('loading');
+                                }, 500);
+                            }
+                        } catch (error) {
+                            console.error('Enter portal error:', error);
+                            enterPortalBtn.classList.remove('loading');
+                        }
+                    };
+                    
+                    // Add multiple event listeners for better compatibility
+                    enterPortalBtn.addEventListener('click', handleEnterPortal);
+                    enterPortalBtn.addEventListener('touchend', handleEnterPortal);
+                    
+                    // Add keyboard support
+                    enterPortalBtn.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            handleEnterPortal(e);
+                        }
                     });
                     
-                    // Show success notification
-                    showNotification('Request sent to your account manager. They will contact you shortly.', 'success');
-                });
-            }
-            
-            // Upgrade buttons
-            if (upgradeBtns) {
-                upgradeBtns.forEach(btn => {
-                    btn.addEventListener('click', showUpgradeModal);
-                });
-            }
-            
-            // Upgrade modal buttons
-            if (closeUpgradeModalBtn) {
-                closeUpgradeModalBtn.addEventListener('click', hideUpgradeModal);
-            }
-            if (upgradeModalOverlay) {
-                upgradeModalOverlay.addEventListener('click', hideUpgradeModal);
-            }
-            if (cancelUpgradeBtn) {
-                cancelUpgradeBtn.addEventListener('click', hideUpgradeModal);
-            }
-            if (confirmUpgradeBtn) {
-                confirmUpgradeBtn.addEventListener('click', () => {
-                    hideUpgradeModal();
-                    voiceAssistant.speak("Wonderful, Diane! Your upgrade request is being processed. Your account manager will guide you through the next steps!", {
-                        rate: 0.9,
-                        pitch: 1.1
-                    });
-                    
-                    // Show info notification
-                    showNotification('Request sent to your account manager. They will contact you shortly.', 'info');
-                });
-            }
-            
-            // Notifications button
-            if (notificationsBtn) {
-                notificationsBtn.addEventListener('click', () => {
-                    voiceAssistant.speak("Here are your latest notifications, Diane. You have important updates about your account validation!", {
-                        rate: 0.9,
-                        pitch: 1.1
-                    });
-                    
-                    showDropdownMenu('notifications', notificationsBtn, getNotificationsHTML());
-                });
-            }
-            
-            // Profile menu button
-            if (profileMenuBtn) {
-                profileMenuBtn.addEventListener('click', () => {
-                    voiceAssistant.speak("Here's your profile menu, Diane. You can access your settings, payments, and support options here.", {
-                        rate: 0.9,
-                        pitch: 1.1
-                    });
-                    
-                    showDropdownMenu('profile', profileMenuBtn, getProfileMenuHTML());
-                });
-            }
-            
-            // Voice indicator click to toggle voice
-            const voiceIndicator = document.getElementById('voice-indicator');
-            if (voiceIndicator) {
-                voiceIndicator.addEventListener('click', () => {
-                    voiceAssistant.toggle();
-                    const voiceText = document.getElementById('voice-text');
-                    if (!voiceAssistant.isEnabled) {
-                        voiceIndicator.style.opacity = '0.5';
-                        if (voiceText) voiceText.textContent = 'Voice disabled';
-                    } else {
-                        voiceIndicator.style.opacity = '1';
-                        if (voiceText) voiceText.textContent = 'Voice enabled';
-                    }
-                });
-            }
-            
-            // Close modals with Escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    if (celebrationPopup && celebrationPopup.classList.contains('active')) {
-                        hideCelebrationPopup();
-                    } else if (paymentModal && paymentModal.classList.contains('active')) {
-                        hidePaymentModal();
-                    } else if (upgradeModal && upgradeModal.classList.contains('active')) {
-                        hideUpgradeModal();
-                    }
+                    console.log('Enter portal button listeners attached');
+                } else {
+                    console.error('Enter portal button not found');
                 }
-            });
+                
+                // Celebration continue button
+                if (celebrationContinue) {
+                    celebrationContinue.addEventListener('click', () => {
+                        try {
+                            hideCelebrationPopup();
+                            if (appState.voiceAssistant) {
+                                appState.voiceAssistant.speak("Let's continue your incredible journey, Diane! Remember to complete your account re-validation to unlock your Distinguished Member of Honor badge.", {
+                                    rate: 0.9,
+                                    pitch: 1.1
+                                });
+                            }
+                        } catch (error) {
+                            console.error('Celebration continue error:', error);
+                        }
+                    });
+                }
+                
+                // Celebration overlay click to close
+                if (celebrationOverlay) {
+                    celebrationOverlay.addEventListener('click', () => {
+                        hideCelebrationPopup();
+                    });
+                }
+                
+                // Dark mode toggle
+                if (darkModeToggle) {
+                    darkModeToggle.addEventListener('click', () => {
+                        try {
+                            document.documentElement.classList.toggle('dark');
+                            updateChartColors();
+                            console.log('Dark mode toggled');
+                        } catch (error) {
+                            console.error('Dark mode toggle error:', error);
+                        }
+                    });
+                }
+                
+                // Payment modal buttons
+                if (fullPaymentBtn) {
+                    fullPaymentBtn.addEventListener('click', showPaymentModal);
+                }
+                if (partPaymentBtn) {
+                    partPaymentBtn.addEventListener('click', showPaymentModal);
+                }
+                if (closeModalBtn) {
+                    closeModalBtn.addEventListener('click', hidePaymentModal);
+                }
+                if (modalOverlay) {
+                    modalOverlay.addEventListener('click', hidePaymentModal);
+                }
+                if (cancelPaymentBtn) {
+                    cancelPaymentBtn.addEventListener('click', hidePaymentModal);
+                }
+                if (confirmPaymentBtn) {
+                    confirmPaymentBtn.addEventListener('click', () => {
+                        try {
+                            hidePaymentModal();
+                            if (appState.voiceAssistant) {
+                                appState.voiceAssistant.speak("Perfect, Diane! Your request has been sent to your account manager. They'll contact you shortly to complete your Member of Honor upgrade!", {
+                                    rate: 0.9,
+                                    pitch: 1.2
+                                });
+                            }
+                            showNotification('Request sent to your account manager. They will contact you shortly.', 'success');
+                        } catch (error) {
+                            console.error('Confirm payment error:', error);
+                        }
+                    });
+                }
+                
+                // Upgrade buttons
+                if (upgradeBtns && upgradeBtns.length > 0) {
+                    upgradeBtns.forEach(btn => {
+                        btn.addEventListener('click', showUpgradeModal);
+                    });
+                }
+                
+                // Upgrade modal buttons
+                if (closeUpgradeModalBtn) {
+                    closeUpgradeModalBtn.addEventListener('click', hideUpgradeModal);
+                }
+                if (upgradeModalOverlay) {
+                    upgradeModalOverlay.addEventListener('click', hideUpgradeModal);
+                }
+                if (cancelUpgradeBtn) {
+                    cancelUpgradeBtn.addEventListener('click', hideUpgradeModal);
+                }
+                if (confirmUpgradeBtn) {
+                    confirmUpgradeBtn.addEventListener('click', () => {
+                        try {
+                            hideUpgradeModal();
+                            if (appState.voiceAssistant) {
+                                appState.voiceAssistant.speak("Wonderful, Diane! Your upgrade request is being processed. Your account manager will guide you through the next steps!", {
+                                    rate: 0.9,
+                                    pitch: 1.1
+                                });
+                            }
+                            showNotification('Request sent to your account manager. They will contact you shortly.', 'info');
+                        } catch (error) {
+                            console.error('Confirm upgrade error:', error);
+                        }
+                    });
+                }
+                
+                // Notifications button
+                if (notificationsBtn) {
+                    notificationsBtn.addEventListener('click', () => {
+                        try {
+                            if (appState.voiceAssistant) {
+                                appState.voiceAssistant.speak("Here are your latest notifications, Diane. You have important updates about your account validation!", {
+                                    rate: 0.9,
+                                    pitch: 1.1
+                                });
+                            }
+                            showDropdownMenu('notifications', notificationsBtn, getNotificationsHTML());
+                        } catch (error) {
+                            console.error('Notifications error:', error);
+                        }
+                    });
+                }
+                
+                // Profile menu button
+                if (profileMenuBtn) {
+                    profileMenuBtn.addEventListener('click', () => {
+                        try {
+                            if (appState.voiceAssistant) {
+                                appState.voiceAssistant.speak("Here's your profile menu, Diane. You can access your settings, payments, and support options here.", {
+                                    rate: 0.9,
+                                    pitch: 1.1
+                                });
+                            }
+                            showDropdownMenu('profile', profileMenuBtn, getProfileMenuHTML());
+                        } catch (error) {
+                            console.error('Profile menu error:', error);
+                        }
+                    });
+                }
+                
+                // Voice indicator click to toggle voice
+                const voiceIndicator = document.getElementById('voice-indicator');
+                if (voiceIndicator) {
+                    voiceIndicator.addEventListener('click', () => {
+                        try {
+                            if (appState.voiceAssistant) {
+                                appState.voiceAssistant.toggle();
+                                const voiceText = document.getElementById('voice-text');
+                                if (!appState.voiceAssistant.isEnabled) {
+                                    voiceIndicator.style.opacity = '0.5';
+                                    if (voiceText) voiceText.textContent = 'Voice disabled';
+                                } else {
+                                    voiceIndicator.style.opacity = '1';
+                                    if (voiceText) voiceText.textContent = 'Voice enabled';
+                                }
+                            }
+                        } catch (error) {
+                            console.error('Voice toggle error:', error);
+                        }
+                    });
+                }
+                
+                // Enhanced keyboard support
+                document.addEventListener('keydown', (e) => {
+                    try {
+                        if (e.key === 'Escape') {
+                            if (celebrationPopup && celebrationPopup.classList.contains('active')) {
+                                hideCelebrationPopup();
+                            } else if (paymentModal && paymentModal.classList.contains('active')) {
+                                hidePaymentModal();
+                            } else if (upgradeModal && upgradeModal.classList.contains('active')) {
+                                hideUpgradeModal();
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Keyboard event error:', error);
+                    }
+                });
+                
+                console.log('Event listeners initialized successfully');
+            } catch (error) {
+                console.error('Event listeners initialization error:', error);
+            }
         }
         
-        // Initialize app
-        document.addEventListener('DOMContentLoaded', () => {
+        // Enhanced app initialization with comprehensive error handling
+        function initializeApp() {
             try {
+                console.log('Initializing Lions Gate Fans Portal...');
+                
+                // Initialize voice assistant
+                appState.voiceAssistant = new VoiceAssistant();
+                
+                // Initialize Three.js
                 initThreeJS();
+                
+                // Initialize event listeners
                 initEventListeners();
                 
-                // Welcome voice message
+                // Welcome voice message with delay
                 setTimeout(() => {
-                    voiceAssistant.speak("Hello Diane Potter! Welcome to your exclusive Lions Gate Fans Portal. You're truly special as one of our top 3 most dedicated fans!", {
-                        rate: 0.9,
-                        pitch: 1.2
-                    });
-                }, 1000);
+                    if (appState.voiceAssistant) {
+                        appState.voiceAssistant.speak("Hello Diane Potter! Welcome to your exclusive Lions Gate Fans Portal. You're truly special as one of our top 3 most dedicated fans!", {
+                            rate: 0.9,
+                            pitch: 1.2
+                        });
+                    }
+                }, 1500);
+                
+                appState.isInitialized = true;
+                console.log('Lions Gate Fans Portal initialized successfully');
+                
+                // Add loading state removal
+                document.body.classList.remove('loading');
+                
             } catch (error) {
                 console.error('App initialization error:', error);
+                
+                // Fallback initialization
+                try {
+                    initEventListeners();
+                    console.log('Fallback initialization completed');
+                } catch (fallbackError) {
+                    console.error('Fallback initialization failed:', fallbackError);
+                }
+            }
+        }
+        
+        // Cleanup function for proper resource management
+        function cleanup() {
+            try {
+                // Clear timers
+                if (appState.countdownInterval) {
+                    clearInterval(appState.countdownInterval);
+                }
+                
+                // Cleanup Three.js instances
+                appState.threeJsInstances.forEach(instance => {
+                    if (instance.cleanup) {
+                        instance.cleanup();
+                    }
+                });
+                
+                // Cleanup chart instances
+                appState.chartInstances.forEach(chart => {
+                    if (chart.destroy) {
+                        chart.destroy();
+                    }
+                });
+                
+                // Stop voice synthesis
+                if (appState.voiceAssistant && appState.voiceAssistant.synth) {
+                    appState.voiceAssistant.synth.cancel();
+                }
+                
+                console.log('Cleanup completed');
+            } catch (error) {
+                console.error('Cleanup error:', error);
+            }
+        }
+        
+        // Enhanced DOM ready detection
+        function ready(fn) {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', fn);
+            } else {
+                fn();
+            }
+        }
+        
+        // Page visibility API for performance optimization
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // Pause animations when page is not visible
+                if (appState.voiceAssistant && appState.voiceAssistant.synth) {
+                    appState.voiceAssistant.synth.cancel();
+                }
+            } else {
+                // Resume when page becomes visible
+                console.log('Page visible again');
             }
         });
+        
+        // Window beforeunload for cleanup
+        window.addEventListener('beforeunload', cleanup);
+        
+        // Enhanced error handling
+        window.addEventListener('error', (e) => {
+            console.error('Global error:', e.error);
+        });
+        
+        window.addEventListener('unhandledrejection', (e) => {
+            console.error('Unhandled promise rejection:', e.reason);
+        });
+        
+        // Initialize the app when DOM is ready
+        ready(initializeApp);
+        
+        console.log('Lions Gate Fans Portal script loaded');
     </script>
-<script>
-function updateCountdown() {
-    const now = new Date();
-    let deadline = new Date();
-    deadline.setHours(18, 45, 0, 0); // 18:45:00.000
-
-    // If it's past today's 6:45 pm, set deadline for tomorrow at 6:45 pm
-    if (now > deadline) {
-        deadline.setDate(deadline.getDate() + 1);
-    }
-
-    const diff = Math.max(0, Math.floor((deadline - now) / 1000));
-    const hours = String(Math.floor(diff / 3600)).padStart(2, '0');
-    const minutes = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
-    const seconds = String(diff % 60).padStart(2, '0');
-    document.getElementById('countdown').textContent = `${hours}:${minutes}:${seconds}`;
-}
-
-setInterval(updateCountdown, 1000);
-updateCountdown();
-</script>
 </body>
 </html>
